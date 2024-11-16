@@ -6,6 +6,7 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R2);
 const int screenWidth = 128;
 const int screenHeight = 64;
 const int groundHeight = 4;
+bool paused = 0;
 
 //Player variables
 const int jumpStrength = 6;
@@ -25,12 +26,28 @@ int boxPosition = 0;
 void endGame() {
   u8g2.clearBuffer();
   u8g2.drawStr(0,15,"GAME OVER!");
+  u8g2.setCursor(100,12);
+  u8g2.print(points);
   u8g2.sendBuffer();
-  delay(10000000);
+
+  //General
+  paused = 1;
+  //Player variables
+  points = 0;
+  //Obstacle variables
+  boxPosition = 0;
+  boxSpeed = 3;
+
+  //Pause
+  while(paused) {
+    if(digitalRead(20) == 0) {
+      paused = 0;
+    }
+  }
 }
 
 void setup() {
-  pinMode(8, INPUT_PULLUP);
+  pinMode(20, INPUT_PULLUP);
   u8g2.begin();
   u8g2.setFont(u8g2_font_t0_18b_mf);
 }
@@ -39,10 +56,11 @@ void loop() {
   u8g2.clearBuffer();
 
 //  Movement
-  // Jump Button
-  if(digitalRead(8) == 0 && playerPosition == 0) {
+  // Jump Button and Restart
+  if(digitalRead(20) == 0 && playerPosition == 0) {
     playerVelocity = jumpStrength;
   }
+
   // Gravity
   playerPosition += playerVelocity;
   playerVelocity -= 1;
