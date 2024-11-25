@@ -40,14 +40,14 @@ void endGame() {
 
   //Pause
   while(paused) {
-    if(digitalRead(20) == 0) {
+    if(digitalRead(4) == 0) {
       paused = 0;
     }
   }
 }
 
 void setup() {
-  pinMode(20, INPUT_PULLUP);
+  pinMode(4, INPUT_PULLUP);
   u8g2.begin();
   u8g2.setFont(u8g2_font_t0_18b_mf);
 }
@@ -57,7 +57,7 @@ void loop() {
 
 //  Movement
   // Jump Button and Restart
-  if(digitalRead(20) == 0 && playerPosition == 0) {
+  if(digitalRead(4) == 0 && playerPosition == 0) {
     playerVelocity = jumpStrength;
   }
 
